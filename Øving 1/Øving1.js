@@ -14,9 +14,9 @@ class Bil {
   }
 }
 
-let volvo = new Bil("3id9j29", "Volvo", 2016, 0);
-let ferrari = new Bil("29dj82s", "Ferrari", 2009, 0);
-let mercedes = new Bil("93ej934", "Mercedes", 2019, 0);
+const volvo = new Bil("3id9j29", "Volvo", 2016, 0);
+const ferrari = new Bil("29dj82s", "Ferrari", 2009, 0);
+const mercedes = new Bil("93ej934", "Mercedes", 2019, 0);
 
 setInterval(() => {
   document.getElementById(
