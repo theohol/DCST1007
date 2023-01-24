@@ -1,3 +1,5 @@
+let btn = document.getElementById("btn");
+
 class Konto {
   constructor(kundeNum, kundeNavn, saldo) {
     this.kundeNum = kundeNum;
@@ -6,6 +8,7 @@ class Konto {
   }
 
   innskudd(deposit) {
+    const message = document.getElementById("p01");
     try {
       if (deposit == "") throw "empty";
       if (isNaN(deposit)) throw "not a number";
@@ -47,3 +50,37 @@ class BarneKonto extends Konto {
 const Lise = new BarneKonto(1, "Lise Jensen");
 const Kari = new Konto(2, "Kari hansen", 895);
 const Petter = new Konto(3, "Petter Olsen", 0);
+
+const arr = [
+  "10:30: Kari tar ut 300 kroner.",
+  "11:00: Bestefaren til Lise er i det gavmilde hjørnet, og setter inn 4000 kroner.",
+  "11:00 Petter setter inn 3000 kr.",
+  "12:15: Kari overfører 250 kroner i bursdagsgave til Petter.",
+  "17:30: Kari tar ut 800 kroner??",
+];
+
+const func = [
+  Kari.uttak(300),
+  Lise.innskudd(4000),
+  Petter.innskudd(3000),
+  Petter.innskudd(250),
+  //Kari.uttak(800),
+];
+
+btn.onclick = () => {
+  let timer = setInterval(() => {
+    if (arr.length) {
+      document.getElementById("output").innerText += arr.shift() + "\n";
+    } else {
+      clearInterval(timer);
+    }
+  }, 5000);
+  setTimeout(() => {
+    for (let i = 0; i < arr.length; i++) {
+      func[i];
+      Lise.kontoInformasjon();
+      Kari.kontoInformasjon();
+      Petter.kontoInformasjon();
+    }
+  }, 25000);
+};
