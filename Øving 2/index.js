@@ -101,7 +101,3 @@ btn.onclick = () => {
     }
   }, 25000);
 };
-
-for (let i = 0; i < func.length; i++) {
-  console.log(func[i]);
-}
