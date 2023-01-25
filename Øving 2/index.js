@@ -60,11 +60,21 @@ const arr = [
 ];
 
 const func = [
-  Kari.uttak(300),
-  Lise.innskudd(4000),
-  Petter.innskudd(3000),
-  Petter.innskudd(250),
-  //Kari.uttak(800),
+  function () {
+    Kari.uttak(300);
+  },
+  function () {
+    Lise.innskudd(4000);
+  },
+  function () {
+    Petter.innskudd(3000);
+  },
+  function () {
+    Petter.innskudd(250);
+  },
+  function () {
+    Kari.uttak(800);
+  },
 ];
 
 btn.onclick = () => {
@@ -74,13 +84,17 @@ btn.onclick = () => {
     } else {
       clearInterval(timer);
     }
+    Lise.kontoInformasjon();
+    Kari.kontoInformasjon();
+    Petter.kontoInformasjon();
   }, 5000);
   setTimeout(() => {
-    for (let i = 0; i < arr.length; i++) {
-      func[i];
-      Lise.kontoInformasjon();
-      Kari.kontoInformasjon();
-      Petter.kontoInformasjon();
+    for (let i = 0; i < func.length; i++) {
+      func[i]();
     }
-  }, 25000);
+  }, 4999);
 };
+
+for (let i = 0; i < func.length; i++) {
+  console.log(func[i]);
+}
