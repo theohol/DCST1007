@@ -56,7 +56,7 @@ const arr = [
   "11:00: Bestefaren til Lise er i det gavmilde hjørnet, og setter inn 4000 kroner.",
   "11:00 Petter setter inn 3000 kr.",
   "12:15: Kari overfører 250 kroner i bursdagsgave til Petter.",
-  "17:30: Kari tar ut 800 kroner??",
+  "17:30: Kari tar ut 800 kroner???",
 ];
 
 const func = [
@@ -84,15 +84,22 @@ btn.onclick = () => {
     } else {
       clearInterval(timer);
     }
+
     Lise.kontoInformasjon();
     Kari.kontoInformasjon();
     Petter.kontoInformasjon();
   }, 5000);
+
+  if (func.length) {
+    for (let key in func) {
+      func[key]().shift();
+    }
+  }
   setTimeout(() => {
     for (let i = 0; i < func.length; i++) {
       func[i]();
     }
-  }, 4999);
+  }, 25000);
 };
 
 for (let i = 0; i < func.length; i++) {
