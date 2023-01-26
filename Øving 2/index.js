@@ -77,6 +77,8 @@ const func = [
   },
 ];
 
+let i = 0;
+
 btn.onclick = () => {
   let timer = setInterval(() => {
     if (arr.length) {
@@ -85,19 +87,14 @@ btn.onclick = () => {
       clearInterval(timer);
     }
 
+    func[i]();
+    i++;
+    if (i === func.length) {
+      clearInterval(timer);
+    }
+
     Lise.kontoInformasjon();
     Kari.kontoInformasjon();
     Petter.kontoInformasjon();
   }, 5000);
-
-  if (func.length) {
-    for (let key in func) {
-      func[key]().shift();
-    }
-  }
-  setTimeout(() => {
-    for (let i = 0; i < func.length; i++) {
-      func[i]();
-    }
-  }, 25000);
 };

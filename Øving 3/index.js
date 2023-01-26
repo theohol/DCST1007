@@ -30,7 +30,9 @@ class Boble {
     }
   }
 
-  erBobleUtenforKanten() {}
+  erBobleUtenforKanten() {
+    let distX = Math.abs(this.x - canvas.width);
+  }
 }
 
 function generateColor() {
@@ -93,9 +95,11 @@ function musbeveg(event) {
     if (bobler[i].inneholder(event.x, event.y)) {
       bobler[i].farge = "red";
     } else {
-      bobler[i].farge = generateColor();
+      bobler[i].farge = true;
     }
   }
+  bobler[i].farge = generateColor();
+  console.log(event.x, event.y);
 }
 
 setInterval(() => {
@@ -107,3 +111,5 @@ setInterval(() => {
   );
   bobler.push(b);
 }, 1000);
+
+console.log(canvas.width, canvas.height);
