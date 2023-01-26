@@ -36,15 +36,6 @@ class Boble {
       return false;
     }
   }
-
-  // erBobleUtenforKanten() {
-  //   if (this.x + this.r > canvas.width || this.x - this.r < 0) {
-  //     this.dx = -this.dx;
-  //   }
-  //   if (this.y + this.r > canvas.height || this.y - this.r < 0) {
-  //     this.dy = -this.dy;
-  //   }
-  // }
 }
 
 function generateColor() {
@@ -62,7 +53,6 @@ canvas.addEventListener("mousedown", musklikk, false);
 canvas.addEventListener("mousemove", musbeveg, false);
 
 let bobler = [];
-let farger = [];
 
 for (let i = 0; i < 10; i++) {
   let x = Math.floor(Math.random() * canvas.width);
@@ -70,11 +60,6 @@ for (let i = 0; i < 10; i++) {
   let r = Math.floor(Math.random() * 40 + 10);
   let farge = generateColor();
   bobler[i] = new Boble(x, y, r, farge);
-}
-
-for (let i = 0; i < bobler.length; i++) {
-  let farge = generateColor();
-  farger.push(farge);
 }
 
 setInterval(tegn, 100);
@@ -107,6 +92,12 @@ function musklikk(event) {
     let b = new Boble(event.x, event.y, r);
     bobler.push(b);
   }
+}
+
+let farger = [];
+for (let i = 0; i < bobler.length; i++) {
+  let farge = generateColor();
+  farger.push(farge);
 }
 
 function musbeveg(event) {
