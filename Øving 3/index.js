@@ -4,11 +4,18 @@ class Boble {
     this.y = y;
     this.r = r;
     this.farge = farge;
-    this.farge = generateColor();
+    this.dx = Math.floor(Math.random() * 10 - 5);
+    this.dy = Math.floor(Math.random() * 10 - 5);
   }
   flytt() {
-    this.x = this.x + Math.floor(Math.random() * 10 - 5);
-    this.y = this.y + Math.floor(Math.random() * 10 - 5);
+    this.x = this.x + this.dx;
+    this.y = this.y + this.dy;
+    if (this.x + this.r > canvas.width || this.x - this.r < 0) {
+      this.dx = -this.dx;
+    }
+    if (this.y + this.r > canvas.height || this.y - this.r < 0) {
+      this.dy = -this.dy;
+    }
   }
   vis() {
     ctx.beginPath();
@@ -30,9 +37,14 @@ class Boble {
     }
   }
 
-  erBobleUtenforKanten() {
-    let distX = Math.abs(this.x - canvas.width);
-  }
+  // erBobleUtenforKanten() {
+  //   if (this.x + this.r > canvas.width || this.x - this.r < 0) {
+  //     this.dx = -this.dx;
+  //   }
+  //   if (this.y + this.r > canvas.height || this.y - this.r < 0) {
+  //     this.dy = -this.dy;
+  //   }
+  // }
 }
 
 function generateColor() {
@@ -50,12 +62,19 @@ canvas.addEventListener("mousedown", musklikk, false);
 canvas.addEventListener("mousemove", musbeveg, false);
 
 let bobler = [];
+let farger = [];
 
 for (let i = 0; i < 10; i++) {
   let x = Math.floor(Math.random() * canvas.width);
   let y = Math.floor(Math.random() * canvas.height);
   let r = Math.floor(Math.random() * 40 + 10);
-  bobler[i] = new Boble(x, y, r);
+  let farge = generateColor();
+  bobler[i] = new Boble(x, y, r, farge);
+}
+
+for (let i = 0; i < bobler.length; i++) {
+  let farge = generateColor();
+  farger.push(farge);
 }
 
 setInterval(tegn, 100);
@@ -95,13 +114,14 @@ function musbeveg(event) {
     if (bobler[i].inneholder(event.x, event.y)) {
       bobler[i].farge = "red";
     } else {
-      bobler[i].farge = true;
+      bobler[i].farge = farger[i];
     }
   }
-  bobler[i].farge = generateColor();
+  // bobler[i].farge = generateColor();
   console.log(event.x, event.y);
 }
 
+// nye randome bobler
 setInterval(() => {
   let r = Math.floor(Math.random() * 40 + 10);
   let b = new Boble(
