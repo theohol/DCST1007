@@ -4,6 +4,8 @@ class Boble {
     this.y = y;
     this.r = r;
     this.farge = farge;
+    this.farge = generateColor();
+    this.origFarge = this.farge;
     this.dx = Math.floor(Math.random() * 10 - 5);
     this.dy = Math.floor(Math.random() * 10 - 5);
   }
@@ -94,22 +96,14 @@ function musklikk(event) {
   }
 }
 
-let farger = [];
-for (let i = 0; i < bobler.length; i++) {
-  let farge = generateColor();
-  farger.push(farge);
-}
-
 function musbeveg(event) {
   for (let i = 0; i < bobler.length; i++) {
     if (bobler[i].inneholder(event.x, event.y)) {
       bobler[i].farge = "red";
     } else {
-      bobler[i].farge = farger[i];
+      bobler[i].farge = bobler[i].origFarge;
     }
   }
-  // bobler[i].farge = generateColor();
-  console.log(event.x, event.y);
 }
 
 // nye randome bobler
