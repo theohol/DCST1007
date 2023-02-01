@@ -23,7 +23,7 @@ testTall(5)
 
 function lagStoreBokstaver(ord) {
   return new Promise((resolve, reject) => {
-    const storeOrd = ord.map((word) => {
+    const storeOrd = ord.map((ord) => {
       if (typeof ord === "string") {
         return ord.toUpperCase();
       } else {
