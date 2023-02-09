@@ -1,13 +1,13 @@
 [
-  { "navn": "Folarskardnuten", "høyde": 1933 },
-  { "navn": "Galdhøpiggen", "høyde": 2469 },
-  { "navn": "Gaustatoppen", "høyde": 1883 },
-  { "navn": "Jiehkkevárri", "høyde": 1834 },
-  { "navn": "Kjerkeberget", "høyde": 630 },
-  { "navn": "Oksskolten", "høyde": 1915 },
-  { "navn": "Pyttegga", "høyde": 1999 },
-  { "navn": "Store Skagastølstinden", "høyde": 2405 },
-  { "navn": "Storskrymten", "høyde": 1985 },
-  { "navn": "Sæbyggjenuten", "høyde": 1507 },
-  { "navn": "Vassdalseggi", "høyde": 1658 }
+  { "fylke": "Viken", "navn": "Folarskardnuten", "høyde": 1933 },
+  { "fylke": "Innlandet", "navn": "Galdhøpiggen", "høyde": 2469 },
+  { "fylke": "Vestfold og Telemark", "navn": "Gaustatoppen", "høyde": 1883 },
+  { "fylke": "Troms og Finnmark", "navn": "Jiehkkevárri", "høyde": 1834 },
+  { "fylke": "Oslo", "navn": "Kjerkeberget", "høyde": 630 },
+  { "fylke": "Nordland", "navn": "Oksskolten", "høyde": 1915 },
+  { "fylke": "Møre og Romsdal", "navn": "Pyttegga", "høyde": 1999 },
+  { "fylke": "Vestland", "navn": "Store Skagastølstinden", "høyde": 2405 },
+  { "fylke": "Trøndelag", "navn": "Storskrymten", "høyde": 1985 },
+  { "fylke": "Agder", "navn": "Sæbyggjenuten", "høyde": 1507 },
+  { "fylke": "Rogaland", "navn": "Vassdalseggi", "høyde": 1658 }
 ]

@@ -7,19 +7,6 @@ fetch("http://127.0.0.1:5500/%C3%98ving%205/fylkestopper.json")
       cellB,
       cellC;
     document.getElementById("demo").appendChild(table);
-    const fylker = [
-      "Innlandet",
-      "Vestland",
-      "Møre og Romsdal",
-      "Trøndelag",
-      "Viken",
-      "Nordland",
-      "Vestfold og Telemark",
-      "Troms og Finnmark",
-      "Rogaland",
-      "Agder",
-      "Oslo",
-    ];
     row = table.insertRow(0);
     cellA = row.insertCell();
     cellB = row.insertCell();
@@ -46,7 +33,7 @@ fetch("http://127.0.0.1:5500/%C3%98ving%205/fylkestopper.json")
       cellB = row.insertCell();
       cellC = row.insertCell();
 
-      cellA.innerHTML = fylker[i];
+      cellA.innerHTML = data[i].fylke;
       cellB.innerHTML = data[i].navn;
       cellC.innerHTML = data[i].høyde;
     }
