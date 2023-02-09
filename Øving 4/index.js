@@ -5,7 +5,7 @@
 function testTall(tall) {
   return new Promise((resolve, reject) => {
     if (isNaN(tall)) {
-      reject(new Error("The input is not a number."));
+      reject(new Error("Det du har skrevet inn er ikke et nummer."));
     } else if (tall > 10) {
       resolve(`Tallet ${tall} er større enn 10`);
     } else if (tall < 10) {
