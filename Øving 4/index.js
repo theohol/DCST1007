@@ -1,3 +1,5 @@
+// NB: Kunne også ha gjort det samme via async/await
+
 // Oppgave 1
 
 function testTall(tall) {
