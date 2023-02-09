@@ -1,0 +1,13 @@
+[
+  { "Viken": { "navn": "Folarskardnuten", "høyde": 1933 } },
+  { "Innlandet": { "navn": "Galdhøpiggen", "høyde": 2469 } },
+  { "Vestfold og Telemark": { "navn": "Gaustatoppen", "høyde": 1883 } },
+  { "Troms og Finnmark": { "navn": "Jiehkkevárri", "høyde": 1834 } },
+  { "Oslo": { "navn": "Kjerkeberget", "høyde": 630 } },
+  { "Nordland": { "navn": "Oksskolten", "høyde": 1915 } },
+  { "Møre og Romsdal": { "navn": "Pyttegga", "høyde": 1999 } },
+  { "Vestland": { "navn": "Store Skagastølstinden", "høyde": 2405 } },
+  { "Trøndelag": { "navn": "Storskrymten", "høyde": 1985 } },
+  { "Agder": { "navn": "Sæbyggjenuten", "høyde": 1507 } },
+  { "Rogaland": { "navn": "Vassdalseggi", "høyde": 1658 } }
+]
