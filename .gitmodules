@@ -1,0 +1,3 @@
+[submodule "react-static-pages"]
+	path = react-static-pages
+	url = https://gitlab.com/ntnu-idri1005/react-static-pages
