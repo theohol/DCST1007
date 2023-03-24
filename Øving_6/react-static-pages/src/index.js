@@ -7,10 +7,11 @@ class Menu extends Component {
   render() {
     return (
       <div>
-        Menu:
-        <NavLink to="/">Home page</NavLink>
-        <NavLink to="/page1">Page 1</NavLink>
-        <NavLink to="/page2">Page 2</NavLink>
+        Menu: <br />
+        <NavLink to="/">Meny</NavLink> <br />
+        <NavLink to="/page1">Utdanning</NavLink> <br />
+        <NavLink to="/page2">Arbeidserfaring</NavLink> <br />
+        <NavLink to="/page3">Interesser</NavLink>
       </div>
     );
   }
@@ -22,15 +23,21 @@ class Home extends Component {
   }
 }
 
-class Page1 extends Component {
+class Utdanning extends Component {
   render() {
-    return <div>Page 1</div>;
+    return <div>Utdanning</div>;
   }
 }
 
-class Page2 extends Component {
+class Arbeidserfaring extends Component {
   render() {
-    return <div>Page 2</div>;
+    return <div>Arbeidserfaring</div>;
+  }
+}
+
+class Interesser extends Component {
+  render() {
+    return <div>Fortnite</div>;
   }
 }
 
@@ -39,8 +46,9 @@ createRoot(document.getElementById('root')).render(
     <div>
       <Menu />
       <Route exact path="/" component={Home} />
-      <Route path="/page1" component={Page1} />
-      <Route path="/page2" component={Page2} />
+      <Route path="/page1" component={Utdanning} />
+      <Route path="/page2" component={Arbeidserfaring} />
+      <Route path="/page3" component={Interesser} />
     </div>
   </HashRouter>
 );
