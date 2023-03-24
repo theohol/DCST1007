@@ -16,7 +16,7 @@ class Menu extends Component {
           Students
         </NavLink>
         {/* {' ' /* Add extra space between menu items */}
-        <NavLink to="/studieprogram" activeStyle={{ color: 'darkblue' }}>
+        <NavLink to="/courses" activeStyle={{ color: 'darkblue' }}>
           Studieprogram
         </NavLink>
       </div>
@@ -50,13 +50,13 @@ class StudentList extends Component {
       if (error) return console.error(error); // If error, show error in console (in red text) and return
 
       this.students = results;
-      console.log(results);
     });
   }
 }
 
 class StudentDetails extends Component {
   student = null;
+  course = '';
 
   render() {
     if (!this.student) return null;
@@ -65,6 +65,7 @@ class StudentDetails extends Component {
       <ul>
         <li>Name: {this.student.name}</li>
         <li>Email: {this.student.email}</li>
+        <li>Course: {this.course}</li>
       </ul>
     );
   }
@@ -77,6 +78,17 @@ class StudentDetails extends Component {
         if (error) return console.error(error); // If error, show error in console (in red text) and return
 
         this.student = results[0];
+
+        pool.query(
+          'SELECT name FROM Courses WHERE id = ?',
+          [this.student.studyProgramId],
+          (error, results) => {
+            if (error) return console.error(error);
+            console.log(results);
+
+            this.course = results[0].name;
+          }
+        );
       }
     );
   }
@@ -90,10 +102,66 @@ class Courses extends Component {
       <ul>
         {this.courses.map((course) => (
           <li key={course.id}>
-            <NavLink to={'/studieprogram/' + course.id}>{course.name}</NavLink>
+            <NavLink to={'/courses/' + course.id}>{course.name}</NavLink>
           </li>
         ))}
       </ul>
+    );
+  }
+
+  mounted() {
+    pool.query('SELECT id, name FROM Courses', (error, results) => {
+      if (error) return console.error(error);
+
+      this.courses = results;
+    });
+  }
+}
+
+class CourseDetails extends Component {
+  studyProgram = null;
+  students = [];
+
+  render() {
+    if (!this.studyProgram) return null;
+
+    return (
+      <div>
+        Details:
+        <ul>
+          <li>Name: {this.studyProgram.name}</li>
+          <li>Course Abbreviation: {this.studyProgram.courseAbbr}</li>
+          <li>
+            Students:
+            <ul>
+              {this.students.map((student) => (
+                <li key={student.id}>{student.name}</li>
+              ))}
+            </ul>
+          </li>
+        </ul>
+      </div>
+    );
+  }
+
+  mounted() {
+    pool.query(
+      'SELECT courseAbbr, name FROM Courses WHERE id=?',
+      [this.props.match.params.id],
+      (error, results) => {
+        if (error) return console.error(error); // If error, show error in console (in red text) and return
+
+        this.studyProgram = results[0];
+      }
+    );
+    pool.query(
+      'SELECT id, name FROM Students WHERE studyProgramId = ?',
+      [this.props.match.params.id],
+      (error, results) => {
+        if (error) return console.error(error); // If error, show error in console (in red text) and return
+
+        this.students = results;
+      }
     );
   }
 }
@@ -105,7 +173,8 @@ createRoot(document.getElementById('root')).render(
       <Route exact path="/" component={Home} />
       <Route exact path="/students" component={StudentList} />
       <Route exact path="/students/:id" component={StudentDetails} />
-      <Route exact path="/Studieprogram" component={Courses} />
+      <Route exact path="/courses" component={Courses} />
+      <Route exact path="/courses/:id" component={CourseDetails} />
     </div>
   </HashRouter>
 );
