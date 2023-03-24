@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Component } from 'react-simplified';
 import { NavLink, HashRouter, Route } from 'react-router-dom';
-import { studentService } from './services';
+import { studentService, studyProgramService } from './services';
 import { createHashHistory } from 'history';
 
 const history = createHashHistory(); // Use history.push(...) to programmatically change path, for instance after successfully saving a student
@@ -18,6 +18,10 @@ class Menu extends Component {
         <NavLink to="/students" activeStyle={{ color: 'darkblue' }}>
           Students
         </NavLink>
+        {' ' /* Add extra space between menu items */}
+        <NavLink to="/courses" activeStyle={{ color: 'darkblue' }}>
+          Courses
+        </NavLink>
       </div>
     );
   }
@@ -26,6 +30,84 @@ class Menu extends Component {
 class Home extends Component {
   render() {
     return <div>Welcome to StudAdm</div>;
+  }
+}
+
+class CourseList extends Component {
+  courses = [];
+
+  render() {
+    return (
+      <ul>
+        {this.courses.map((course) => (
+          <li key={course.id}>
+            <NavLink to={'/courses/' + course.id}>{course.name}</NavLink>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
+  mounted() {
+    studyProgramService.getCourses((courses) => {
+      this.courses = courses;
+    });
+  }
+}
+
+class CourseDetails extends Component {
+  studyProgram = null;
+  students = [];
+
+  render() {
+    if (!this.studyProgram) return null;
+
+    return (
+      <div>
+        Details:
+        <ul>
+          <li>Name: {this.studyProgram.name}</li>
+          <li>Course Abbreviation: {this.studyProgram.courseAbbr}</li>
+          <li>
+            Students:
+            <ul>
+              {this.students.map((student) => (
+                <li key={student.id}>{student.name}</li>
+              ))}
+            </ul>
+          </li>
+        </ul>
+      </div>
+    );
+  }
+
+  mounted() {
+    studyProgramService.getDetails((courses, students) => {
+      this.studyProgram = courses;
+      this.students = students;
+    });
+  }
+}
+
+class CourseEdit extends Component {
+  course = null;
+
+  render() {
+    if (!this.course) return null;
+
+    return <div></div>;
+  }
+
+  mounted() {
+    studyProgramService.getCourse(this.props.match.params.id, (student) => {
+      this.course = course;
+    });
+  }
+
+  save() {
+    studyProgramService.updateCourse(this.course, () => {
+      history.push('/courses');
+    });
   }
 }
 
@@ -97,5 +179,8 @@ createRoot(document.getElementById('root')).render(
     <Route exact path="/" component={Home} />
     <Route exact path="/students" component={StudentList} />
     <Route path="/students/:id/edit" component={StudentEdit} />
+    <Route path="/courses" component={CourseList} />
+    <Route path="/courses/:id/edit" component={CourseEdit} />
+    <Route exact path="/courses/:id" component={CourseDetails} />
   </HashRouter>
 );
