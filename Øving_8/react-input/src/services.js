@@ -1,8 +1,4 @@
 import { pool } from './mysql-pool';
-import * as React from 'react';
-import { createRoot } from 'react-dom/client';
-import { Component } from 'react-simplified';
-import { NavLink, HashRouter, Route } from 'react-router-dom';
 
 class StudentService {
   getStudents(success) {
@@ -21,10 +17,30 @@ class StudentService {
     });
   }
 
+  addStudent(student, success) {
+    pool.query(
+      'INSERT INTO Students (name, email, groupId) VALUES (?, ?, ?)',
+      [student.name, student.email, student.groupId],
+      (error, results) => {
+        if (error) return console.error(error);
+
+        success(results.insertId);
+      }
+    );
+  }
+
+  removeStudent(id, success) {
+    pool.query('DELETE FROM Students WHERE id=?', [id], (error, results) => {
+      if (error) return console.error(error);
+
+      success();
+    });
+  }
+
   updateStudent(student, success) {
     pool.query(
-      'UPDATE Students SET name=?, email=? WHERE id=?',
-      [student.name, student.email, student.id],
+      'UPDATE Students SET name=?, email=?, groupId=? WHERE id=?',
+      [student.name, student.email, student.groupId, student.id],
       (error, results) => {
         if (error) return console.error(error);
 
@@ -51,6 +67,14 @@ class StudyProgramService {
     });
   }
 
+  getStudents(groupId, success) {
+    pool.query('SELECT * FROM Students WHERE groupId = ?', [groupId], (error, results) => {
+      if (error) return console.error(error); // If error, show error in console (in red text) and return
+
+      success(results);
+    });
+  }
+
   updateCourse(course, success) {
     pool.query(
       'UPDATE Courses SET name=?, courseAbbr=? WHERE id=?',
@@ -63,26 +87,24 @@ class StudyProgramService {
     );
   }
 
-  getDetails(success) {
+  addCourse(student, success) {
     pool.query(
-      'SELECT courseAbbr, name FROM Courses WHERE id=?',
-      [this.props.match.params.id],
+      'INSERT INTO Courses (name, code) VALUES (?, ?)',
+      [student.name, student.code],
       (error, results) => {
-        if (error) return console.error(error); // If error, show error in console (in red text) and return
+        if (error) return console.error(error);
 
-        success(results[0]);
+        success(results.insertId);
       }
     );
+  }
 
-    pool.query(
-      'SELECT id, name FROM Students WHERE studyProgramId = ?',
-      [this.props.match.params.id],
-      (error, results) => {
-        if (error) return console.error(error); // If error, show error in console (in red text) and return
+  removeCourse(id, success) {
+    pool.query('DELETE FROM Courses WHERE id=?', [id], (error, results) => {
+      if (error) return console.error(error);
 
-        success(results);
-      }
-    );
+      success();
+    });
   }
 }
 

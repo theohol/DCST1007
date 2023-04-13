@@ -56,18 +56,18 @@ class CourseList extends Component {
 }
 
 class CourseDetails extends Component {
-  studyProgram = null;
+  course = null;
   students = [];
 
   render() {
-    if (!this.studyProgram) return null;
+    if (!this.course) return null;
 
     return (
       <div>
         Details:
         <ul>
-          <li>Name: {this.studyProgram.name}</li>
-          <li>Course Abbreviation: {this.studyProgram.courseAbbr}</li>
+          <li>Name: {this.course.name}</li>
+          <li>Course Abbreviation: {this.course.courseAbbr}</li>
           <li>
             Students:
             <ul>
@@ -77,29 +77,70 @@ class CourseDetails extends Component {
             </ul>
           </li>
         </ul>
+        <button type="button" onClick={this.edit}>
+          Edit
+        </button>
+        <button type="button" onClick={this.delete}>
+          Delete
+        </button>
       </div>
     );
   }
 
   mounted() {
-    studyProgramService.getDetails((courses, students) => {
-      this.studyProgram = courses;
-      this.students = students;
-    });
+    studyProgramService.getCourse(this.props.match.params.id, (course) => (this.course = course));
+    studyProgramService.getStudents(
+      this.props.match.params.id,
+      (students) => (this.students = students)
+    );
+  }
+
+  edit() {
+    history.push('/courses/' + this.course.id + '/edit');
+  }
+
+  delete() {
+    studyProgramService.removeCourse(this.props.match.params.id, () => history.push('/courses'));
   }
 }
 
 class CourseEdit extends Component {
   course = null;
+  studentList = null;
 
   render() {
     if (!this.course) return null;
 
-    return <div></div>;
+    return (
+      <div>
+        Course Name:{' '}
+        <input
+          type="text"
+          value={this.course.name}
+          onChange={(event) => (this.course.name = event.currentTarget.value)}
+        />
+        <br></br>
+        Course Code:{' '}
+        <input
+          type="text"
+          value={this.course.courseAbbr}
+          onChange={(event) => (this.course.courseAbbr = event.currentTarget.value)}
+        />
+        <br></br>
+        <button type="button" onClick={this.save}>
+          Save
+        </button>
+        <button type="button" onClick={this.remove}>
+          Remove Course
+        </button>
+        <br></br>
+        Students: {this.studentList}
+      </div>
+    );
   }
 
   mounted() {
-    studyProgramService.getCourse(this.props.match.params.id, (student) => {
+    studyProgramService.getCourse(this.props.match.params.id, (course) => {
       this.course = course;
     });
   }
@@ -109,20 +150,54 @@ class CourseEdit extends Component {
       history.push('/courses');
     });
   }
+
+  remove() {
+    studyProgramService.removeCourse(this.props.match.params.id, () => {
+      history.push('/courses');
+    });
+  }
 }
 
 class StudentList extends Component {
   students = [];
 
+  newStudentName = null;
+  newStudentEmail = null;
+  newStudentCourseID = null;
+
   render() {
     return (
-      <ul>
-        {this.students.map((student) => (
-          <li key={student.id}>
-            <NavLink to={'/students/' + student.id + '/edit'}>{student.name}</NavLink>
-          </li>
-        ))}
-      </ul>
+      <div>
+        <ul>
+          {this.students.map((student) => (
+            <li key={student.id}>
+              <NavLink to={'/students/' + student.id + '/edit'}>{student.name}</NavLink>
+            </li>
+          ))}
+        </ul>
+        <br />
+        Name:{' '}
+        <input
+          type="text"
+          onChange={(event) => (this.newStudentName = event.currentTarget.value)}
+        />
+        <br></br>
+        Email:{' '}
+        <input
+          type="text"
+          onChange={(event) => (this.newStudentEmail = event.currentTarget.value)}
+        />
+        <br></br>
+        Course ID:{' '}
+        <input
+          type="text"
+          onChange={(event) => (this.newStudentCourseID = event.currentTarget.value)}
+        />
+        <br></br>
+        <button type="button" onClick={this.add}>
+          Add Student
+        </button>
+      </div>
     );
   }
 
@@ -131,10 +206,25 @@ class StudentList extends Component {
       this.students = students;
     });
   }
+
+  add() {
+    studentService.addStudent(
+      this.newStudentName,
+      this.newStudentEmail,
+      this.newStudentCourseID,
+      () => {
+        history.push('/students');
+      }
+    );
+    this.mounted();
+  }
 }
 
 class StudentEdit extends Component {
   student = null;
+  newCourseName = null;
+  newCourseCode = null;
+  newCourseGroup = null;
 
   render() {
     if (!this.student) return null;
@@ -156,6 +246,9 @@ class StudentEdit extends Component {
         <button type="button" onClick={this.save}>
           Save
         </button>
+        <button type="button" onClick={this.remove}>
+          Remove Student
+        </button>
       </div>
     );
   }
@@ -171,6 +264,12 @@ class StudentEdit extends Component {
       history.push('/students');
     });
   }
+
+  remove() {
+    studentService.removeStudent(this.props.match.params.id, () => {
+      history.push('/students');
+    });
+  }
 }
 
 createRoot(document.getElementById('root')).render(
@@ -179,8 +278,8 @@ createRoot(document.getElementById('root')).render(
     <Route exact path="/" component={Home} />
     <Route exact path="/students" component={StudentList} />
     <Route path="/students/:id/edit" component={StudentEdit} />
-    <Route path="/courses" component={CourseList} />
-    <Route path="/courses/:id/edit" component={CourseEdit} />
+    <Route exact path="/courses" component={CourseList} />
     <Route exact path="/courses/:id" component={CourseDetails} />
+    <Route path="/courses/:id/edit" component={CourseEdit} />
   </HashRouter>
 );

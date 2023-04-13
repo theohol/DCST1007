@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Component } from 'react-simplified';
 import { NavLink, HashRouter, Route } from 'react-router-dom';
-import { studentService, groupService } from './services';
+import { Student, studentService, groupService, Group } from './services';
 import { Alert, Card, Row, Column, NavBar, Button, Form } from './widgets';
 import { createHashHistory } from 'history';
 
@@ -26,7 +26,7 @@ class Home extends Component {
 }
 
 class StudentList extends Component {
-  students = [];
+  students: Student[] = [];
 
   render() {
     return (
@@ -45,20 +45,16 @@ class StudentList extends Component {
   mounted() {
     studentService
       .getStudents()
-      .then((students) => {
-        this.students = students;
-      })
-      .catch((error) => Alert.danger('Error getting students'));
+      .then((students) => (this.students = students))
+      .catch((error) => Alert.danger('ERROR getting students'));
   }
 }
 
-class StudentDetails extends Component {
-  student = null;
-  group = null;
+class StudentDetails extends Component<{ match: { params: { id: string } } }> {
+  student = new Student();
+  group = new Group();
 
   render() {
-    if (!this.student || !this.group) return null;
-
     return (
       <div>
         <Card title="Student details">
@@ -84,19 +80,15 @@ class StudentDetails extends Component {
 
   mounted() {
     studentService
-      .getStudent(this.props.match.params.id)
-      .then((student) => {
-        this.student = student;
-      })
-      .then((student) => {
+      .getStudent(Number(this.props.match.params.id))
+      .then((student: any) => (this.student = student))
+      .then((student: any) => {
         studentService
           .getGroup(student.groupId)
-          .then((group) => {
-            this.group = group;
-          })
-          .catch((error) => Alert.danger('Error! Failed to get group'));
+          .then((group: any) => (this.group = group))
+          .catch((error) => Alert.danger('ERROR! Failed to get group'));
       })
-      .catch((error) => Alert.danger('Error getting student'));
+      .catch((error) => Alert.danger('ERROR getting student'));
   }
 
   edit() {
@@ -104,8 +96,8 @@ class StudentDetails extends Component {
   }
 }
 
-class StudentEdit extends Component {
-  student = null;
+class StudentEdit extends Component<{ match: { params: { id: string } } }> {
+  student = new Student();
 
   render() {
     return (
@@ -115,13 +107,17 @@ class StudentEdit extends Component {
           <Form.Input
             type="text"
             value={this.student.name}
-            onChange={(event) => (this.student.name = event.currentTarget.value)}
+            onChange={(event: { currentTarget: { value: string } }) =>
+              (this.student.name = event.currentTarget.value)
+            }
           />
           <Form.Label>Email:</Form.Label>
           <Form.Input
             type="text"
             value={this.student.email}
-            onChange={(event) => (this.student.email = event.currentTarget.value)}
+            onChange={(event: { currentTarget: { value: string } }) =>
+              (this.student.name = event.currentTarget.value)
+            }
           />
         </Card>
         <Row>
@@ -138,20 +134,15 @@ class StudentEdit extends Component {
 
   mounted() {
     studentService
-      .getStudent(this.props.match.params.id)
-      .then((student) => {
-        this.student = student;
-      })
-      .catch((error) => Alert.danger('Error getting students'));
+      .getStudent(Number(this.props.match.params.id))
+      .then((student: any) => (this.student = student))
+      .catch((error) => Alert.danger('ERROR getting students'));
   }
 
   save() {
-    studentService
-      .updateStudent(this.student)
-      .then((response) => {
-        history.push('/students/' + this.props.match.params.id);
-      })
-      .catch((error) => Alert.danger('An error occurred while updating'));
+    studentService.updateStudent(this.student, () => {
+      history.push('/students/' + this.props.match.params.id);
+    });
   }
 
   cancel() {
@@ -160,7 +151,7 @@ class StudentEdit extends Component {
 }
 
 class GroupList extends Component {
-  groups = [];
+  groups: Group[] = [];
 
   render() {
     return (
@@ -179,20 +170,18 @@ class GroupList extends Component {
   mounted() {
     groupService
       .getGroups()
-      .then((groups) => {
+      .then((groups: any) => {
         this.groups = groups;
       })
       .catch((error) => Alert.danger('Error getting group'));
   }
 }
 
-class GroupDetails extends Component {
-  group = null;
-  members = [];
+class GroupDetails extends Component<{ match: { params: { id: string } } }> {
+  group = new Group();
+  members: any = [];
 
   render() {
-    if (!this.group) return null;
-
     return (
       <div>
         <Card title="Group details">
@@ -215,7 +204,7 @@ class GroupDetails extends Component {
           <Row>
             <Column width={2}>Medlemmer:</Column>
           </Row>
-          {this.members.map((member) => (
+          {this.members.map((member: { id: number; name: string }) => (
             <Row key={member.id}>
               <Column>
                 <NavLink to={'/students/' + member.id}>{member.name}</NavLink>
@@ -230,12 +219,12 @@ class GroupDetails extends Component {
 
   mounted() {
     groupService
-      .getGroup(this.props.match.params.id)
-      .then((group) => (this.group = group))
+      .getGroup(Number(this.props.match.params.id))
+      .then((group: any) => (this.group = group))
       .catch((error) => Alert.danger('Error getting group'));
 
     groupService
-      .getMembers(this.props.match.params.id)
+      .getMembers(Number(this.props.match.params.id))
       .then((members) => (this.members = members))
       .catch((error) => Alert.danger('Error getting members'));
   }
@@ -245,12 +234,10 @@ class GroupDetails extends Component {
   }
 }
 
-class GroupEdit extends Component {
-  group = null;
+class GroupEdit extends Component<{ match: { params: { id: string } } }> {
+  group = new Group();
 
   render() {
-    if (!this.group) return null;
-
     return (
       <div>
         <Card title="Edit group">
@@ -258,19 +245,25 @@ class GroupEdit extends Component {
           <Form.Input
             type="text"
             value={this.group.name}
-            onChange={(event) => (this.group.name = event.currentTarget.value)}
+            onChange={(event: { currentTarget: { value: any } }) =>
+              (this.group.name = event.currentTarget.value)
+            }
           />
           <Form.Label>Details:</Form.Label>
           <Form.Input
             type="text"
             value={this.group.description}
-            onChange={(event) => (this.group.description = event.currentTarget.value)}
+            onChange={(event: { currentTarget: { value: any } }) =>
+              (this.group.description = event.currentTarget.value)
+            }
           />
           <Form.Label>Image:</Form.Label>
           <Form.Input
             type="text"
             value={this.group.image}
-            onChange={(event) => (this.group.image = event.currentTarget.value)}
+            onChange={(event: { currentTarget: { value: any } }) =>
+              (this.group.image = event.currentTarget.value)
+            }
           />
         </Card>
         <Row>
@@ -287,8 +280,8 @@ class GroupEdit extends Component {
 
   mounted() {
     groupService
-      .getGroup(this.props.match.params.id)
-      .then((group) => (this.group = group))
+      .getGroup(Number(this.props.match.params.id))
+      .then((group: any) => (this.group = group))
       .catch((error) => Alert.danger('Error getting group'));
   }
 
@@ -306,18 +299,22 @@ class GroupEdit extends Component {
   }
 }
 
-createRoot(document.getElementById('root')).render(
-  <div>
-    <Alert />
-    <HashRouter>
-      <Menu />
-      <Route exact path="/" component={Home} />
-      <Route exact path="/students" component={StudentList} />
-      <Route exact path="/students/:id" component={StudentDetails} />
-      <Route exact path="/students/:id/edit" component={StudentEdit} />
-      <Route exact path="/groups" component={GroupList} />
-      <Route exact path="/groups/:id" component={GroupDetails} />
-      <Route exact path="/groups/:id/edit" component={GroupEdit} />
-    </HashRouter>
-  </div>
-);
+let root = document.getElementById('root');
+if (root)
+  createRoot(root).render(
+    <div>
+      <Alert />
+      <HashRouter>
+        <div>
+          <Menu />
+          <Route exact path="/" component={Home} />
+          <Route exact path="/students" component={StudentList} />
+          <Route exact path="/students/:id" component={StudentDetails} />
+          <Route exact path="/students/:id/edit" component={StudentEdit} />
+          <Route exact path="/groups" component={GroupList} />
+          <Route exact path="/groups/:id" component={GroupDetails} />
+          <Route exact path="/groups/:id/edit" component={GroupEdit} />
+        </div>
+      </HashRouter>
+    </div>
+  );

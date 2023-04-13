@@ -72,23 +72,19 @@ class StudentDetails extends Component {
 
   mounted() {
     pool.query(
-      'SELECT name, email FROM Students WHERE id=?',
+      'SELECT name, email, groupId FROM Students WHERE id=?',
       [this.props.match.params.id],
       (error, results) => {
         if (error) return console.error(error); // If error, show error in console (in red text) and return
 
         this.student = results[0];
 
-        pool.query(
-          'SELECT name FROM Courses WHERE id = ?',
-          [this.student.studyProgramId],
-          (error, results) => {
-            if (error) return console.error(error);
-            console.log(results);
+        pool.query('SELECT * FROM Courses WHERE id=?', [this.student.groupId], (error, results) => {
+          if (error) return console.error(error);
+          console.log(results);
 
-            this.course = results[0].name;
-          }
-        );
+          this.course = results[0].name;
+        });
       }
     );
   }
@@ -155,7 +151,7 @@ class CourseDetails extends Component {
       }
     );
     pool.query(
-      'SELECT id, name FROM Students WHERE studyProgramId = ?',
+      'SELECT id, name FROM Students WHERE groupId=?',
       [this.props.match.params.id],
       (error, results) => {
         if (error) return console.error(error); // If error, show error in console (in red text) and return

@@ -1,32 +1,96 @@
 import { pool } from './mysql-pool';
 
 class StudentService {
-  getStudents(success) {
-    pool.query('SELECT * FROM Students', (error, results) => {
-      if (error) return console.error(error);
+  getStudents() {
+    return new Promise((resolve, reject) => {
+      pool.query('SELECT * FROM Students', (error, results) => {
+        if (error) return reject(error);
 
-      success(results);
+        resolve(results);
+      });
     });
   }
 
-  getStudent(id, success) {
-    pool.query('SELECT * FROM Students WHERE id=?', [id], (error, results) => {
-      if (error) return console.error(error);
+  getStudent(id) {
+    return new Promise((resolve, reject) => {
+      pool.query('SELECT * FROM Students WHERE id=?', [id], (error, results) => {
+        if (error) return reject(error);
 
-      success(results[0]);
+        resolve(results[0]);
+      });
     });
   }
 
-  updateStudent(student, success) {
-    pool.query(
-      'UPDATE Students SET name=?, email=? WHERE id=?',
-      [student.name, student.email, student.id],
-      (error, results) => {
-        if (error) return console.error(error);
+  getGroup(id) {
+    return new Promise((resolve, reject) => {
+      pool.query('SELECT * FROM Groups WHERE id=?', [id], (error, results) => {
+        if (error) return reject(error);
 
-        success();
-      }
-    );
+        resolve(results[0]);
+      });
+    });
+  }
+
+  updateStudent(student) {
+    return new Promise((resolve, reject) => {
+      pool.query(
+        'UPDATE Students SET name=?, email=? WHERE id=?',
+        [student.name, student.email, student.id],
+        (error, results) => {
+          if (error) return reject(error);
+
+          resolve(results);
+        }
+      );
+    });
   }
 }
 export let studentService = new StudentService();
+
+class GroupService {
+  getGroups() {
+    return new Promise((resolve, reject) => {
+      pool.query('SELECT * FROM Groups', (results, error) => {
+        if (error) return reject(error);
+
+        resolve(results);
+      });
+    });
+  }
+
+  getGroup(id) {
+    return new Promise((resolve, reject) => {
+      pool.query('SELECT * FROM Groups WHERE id=?', [id], (results, error) => {
+        if (error) return reject(error);
+
+        resolve(results[0]);
+      });
+    });
+  }
+
+  getMembers(memberGroup) {
+    return new Promise((resolve, reject) => {
+      pool.query('SELECT * FROM Students WHERE groupID=?', [memberGroup], (results, error) => {
+        if (error) return reject(error);
+
+        resolve(results);
+      });
+    });
+  }
+
+  updateGroup(group) {
+    return new Promise((resolve, reject) => {
+      pool.query(
+        'UPDATE Groups SET name=?, description=?, image=? WHERE id=?',
+        [group.name, group.description, group.image, group.id],
+        (error, results) => {
+          if (error) return reject(error);
+
+          resolve();
+        }
+      );
+    });
+  }
+}
+
+export let groupService = new GroupService();
