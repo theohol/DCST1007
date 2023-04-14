@@ -50,7 +50,7 @@ export let studentService = new StudentService();
 class GroupService {
   getGroups() {
     return new Promise((resolve, reject) => {
-      pool.query('SELECT * FROM Groups', (results, error) => {
+      pool.query('SELECT * FROM Groups', (error, results) => {
         if (error) return reject(error);
 
         resolve(results);
@@ -60,7 +60,7 @@ class GroupService {
 
   getGroup(id) {
     return new Promise((resolve, reject) => {
-      pool.query('SELECT * FROM Groups WHERE id=?', [id], (results, error) => {
+      pool.query('SELECT * FROM Groups WHERE id=?', [id], (error, results) => {
         if (error) return reject(error);
 
         resolve(results[0]);
@@ -70,7 +70,7 @@ class GroupService {
 
   getMembers(memberGroup) {
     return new Promise((resolve, reject) => {
-      pool.query('SELECT * FROM Students WHERE groupID=?', [memberGroup], (results, error) => {
+      pool.query('SELECT * FROM Students WHERE groupID=?', [memberGroup], (error, results) => {
         if (error) return reject(error);
 
         resolve(results);

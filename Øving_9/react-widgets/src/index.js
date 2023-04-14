@@ -90,13 +90,13 @@ class StudentDetails extends Component {
       })
       .then((student) => {
         studentService
-          .getGroup(student.groupId)
+          .getGroup(this.student.groupId)
           .then((group) => {
             this.group = group;
           })
           .catch((error) => Alert.danger('Error! Failed to get group'));
       })
-      .catch((error) => Alert.danger('Error getting student'));
+      .catch((error) => console.error(error));
   }
 
   edit() {
@@ -108,6 +108,7 @@ class StudentEdit extends Component {
   student = null;
 
   render() {
+    if (!this.student) return null;
     return (
       <div>
         <Card title="Edit student">
